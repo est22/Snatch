@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		0A1AF8E82F2FA360008CD611 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 0A1AF8E62F2FA359008CD611 /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		0A1AF8E62F2FA359008CD611 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		0A59096F2F237D9E00F2C2A5 /* Snatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -32,6 +37,7 @@
 		0A5909662F237D9E00F2C2A5 = {
 			isa = PBXGroup;
 			children = (
+				0A1AF8E62F2FA359008CD611 /* .gitignore */,
 				0A5909712F237D9E00F2C2A5 /* Snatch */,
 				0A5909702F237D9E00F2C2A5 /* Products */,
 			);
@@ -109,6 +115,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A1AF8E82F2FA360008CD611 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
