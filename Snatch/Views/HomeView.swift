@@ -30,6 +30,7 @@ struct HomeView: View {
     @State private var errorMessage: String?
     @State private var showResults = false
     @State private var droppedImage: NSImage?
+    @FocusState private var isFocused: Bool
 
     private var config: LanguageConfig? { configs.first }
 
@@ -72,6 +73,13 @@ struct HomeView: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Color(.separatorColor).opacity(0.3))
                     )
+
+                // Manual paste button as fallback
+                Button("Paste from Clipboard") {
+                    handleDirectPaste()
+                }
+                .buttonStyle(.bordered)
+                .padding(.top, 8)
             }
 
             if let error = errorMessage {
@@ -84,15 +92,18 @@ struct HomeView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .contentShape(Rectangle()) // makes entire area tappable/droppable
+        .contentShape(Rectangle())
+        .focusable()
+        .focused($isFocused)
+        .onAppear { isFocused = true }
         .onDrop(of: [.image, .text], isTargeted: nil) { providers in
             handleDrop(providers)
             return true
         }
-        .onPasteCommand(of: [UTType.png, UTType.tiff, UTType.plainText]) { providers in
-            handlePaste(providers)
+        .onCopyCommand { return [] } // Enable Edit menu
+        .onPasteCommand {
+            handleDirectPaste()
         }
-        // Keyboard shortcut: Cmd+V is handled by onPasteCommand above
     }
 
     // MARK: - Results View (after paste)
@@ -155,6 +166,32 @@ struct HomeView: View {
     }
 
     // MARK: - Actions
+
+    /// Direct clipboard read - more reliable than NSItemProvider on macOS
+    private func handleDirectPaste() {
+        isProcessing = true
+        errorMessage = nil
+
+        let pasteboard = NSPasteboard.general
+
+        // Try image first (screenshots)
+        if let image = NSImage(pasteboard: pasteboard) {
+            Task {
+                await processImage(image)
+            }
+            return
+        }
+
+        // Then try text
+        if let text = pasteboard.string(forType: .string), !text.isEmpty {
+            processText(text)
+            return
+        }
+
+        // Nothing found
+        errorMessage = "Clipboard is empty"
+        isProcessing = false
+    }
 
     private func handlePaste(_ providers: [NSItemProvider]) {
         isProcessing = true
