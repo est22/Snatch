@@ -17,6 +17,8 @@
 
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
+import AppKit
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
@@ -87,7 +89,7 @@ struct HomeView: View {
             handleDrop(providers)
             return true
         }
-        .onPasteCommand(of: [.png, .tiff, .string]) { providers in
+        .onPasteCommand(of: [UTType.png, UTType.tiff, UTType.plainText]) { providers in
             handlePaste(providers)
         }
         // Keyboard shortcut: Cmd+V is handled by onPasteCommand above
