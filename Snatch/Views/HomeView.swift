@@ -101,7 +101,7 @@ struct HomeView: View {
             return true
         }
         .onCopyCommand { return [] } // Enable Edit menu
-        .onPasteCommand {
+        .onPasteCommand(of: [UTType.png, UTType.tiff, UTType.plainText]) { _ in
             handleDirectPaste()
         }
     }
